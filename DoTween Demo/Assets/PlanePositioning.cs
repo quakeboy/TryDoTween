@@ -12,8 +12,10 @@ public class PlanePositioning : MonoBehaviour
 	public Transform Player;
 	public Slider DurationSlider;
 	public Slider EaseOvershootSlider;
-	public DropDownList EaseType;
-	public DropDownList EaseEquation;
+	public DropDownList EaseTypeX;
+	public DropDownList EaseEquationX;
+	public DropDownList EaseTypeY;
+	public DropDownList EaseEquationY;
 
 	// Use this for initialization
 	void Start () 
@@ -31,12 +33,23 @@ public class PlanePositioning : MonoBehaviour
 			RaycastHit hitInfo;
 			ColliderForRayCast.Raycast(ray, out hitInfo, 100f);
 
-			Ease ease = Ease.Linear;
+			//X Axis
+			Ease easeX = Ease.Linear;
 
-			if (EaseType.SelectedItem != null && EaseEquation.SelectedItem != null)
-				ease = (Ease) Enum.Parse(typeof(Ease), EaseType.SelectedItem.Caption + EaseEquation.SelectedItem.Caption);
+			if (EaseTypeX.SelectedItem != null && EaseEquationX.SelectedItem != null)
+				easeX = (Ease) Enum.Parse(typeof(Ease), EaseTypeX.SelectedItem.Caption + EaseEquationX.SelectedItem.Caption);
 
-			Player.DOMove(hitInfo.point, DurationSlider.value).SetEase(ease, EaseOvershootSlider.value);
+			Player.DOMoveX(hitInfo.point.x, DurationSlider.value).SetEase(easeX, EaseOvershootSlider.value);
+
+			//Y Axis
+			Ease easeY = Ease.Linear;
+			
+			if (EaseTypeY.SelectedItem != null && EaseEquationY.SelectedItem != null)
+				easeY = (Ease) Enum.Parse(typeof(Ease), EaseTypeY.SelectedItem.Caption + EaseEquationY.SelectedItem.Caption);
+
+			//DoMoveZ because of the camera setup in 3D
+			Player.DOMoveZ(hitInfo.point.z, DurationSlider.value).SetEase(easeY, EaseOvershootSlider.value);
+
 		}
 	}
 }
